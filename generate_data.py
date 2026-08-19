@@ -5,7 +5,7 @@ import pandas as pd
 
 
 random.seed(42)
-releases = ["R25.1", "R25.2", "R25.3", "R26.1"]
+releases = ["R22", "R23", "R24", "R25"]
 modules = ["Core Banking", "Pagos", "Préstamos", "Tarjetas", "Canales Digitales", "AML/KYC", "COB/EOD"]
 environments = ["SIT", "UAT", "Preproducción"]
 owners = ["Equipo Core", "Equipo Pagos", "Equipo Créditos", "Equipo Canales"]
