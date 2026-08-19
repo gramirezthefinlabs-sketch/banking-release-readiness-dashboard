@@ -205,14 +205,22 @@ with tab1:
         defects.columns = ["Críticos", "Altos"]
         st.bar_chart(defects, color=["#DC2626", "#F59E0B"], height=320)
 
-    st.markdown("#### Tendencia de aprobación por fecha")
-    trend = (
-        filtered.assign(tasa=lambda x: x["pruebas_aprobadas"] / x["pruebas_ejecutadas"] * 100)
-        .groupby("fecha_planificada")["tasa"]
-        .mean()
-        .rename("Aprobación %")
+    st.markdown("#### Tendencia mensual de aprobación")
+    monthly_trend = (
+        filtered.assign(
+            mes=filtered["fecha_planificada"].dt.to_period("M").dt.to_timestamp()
+        )
+        .groupby("mes")
+        .agg(
+            Aprobadas=("pruebas_aprobadas", "sum"),
+            Ejecutadas=("pruebas_ejecutadas", "sum"),
+        )
+        .sort_index()
     )
-    st.line_chart(trend, color="#2563EB", height=260)
+    monthly_trend["Aprobación %"] = (
+        monthly_trend["Aprobadas"] / monthly_trend["Ejecutadas"] * 100
+    ).round(1)
+    st.line_chart(monthly_trend[["Aprobación %"]], color="#2563EB", height=260)
 
 with tab2:
     st.markdown("#### Mapa de priorización")
