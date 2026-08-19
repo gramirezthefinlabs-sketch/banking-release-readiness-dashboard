@@ -24,7 +24,6 @@ COLORS = {
 }
 
 
-@st.cache_data
 def load_data() -> pd.DataFrame:
     data = pd.read_csv(DATA_PATH, parse_dates=["fecha_planificada"])
     numeric_columns = [
@@ -137,7 +136,7 @@ with st.sidebar:
     st.title("🚦 Release Control")
     st.caption("NovaBank · Datos completamente ficticios")
     releases = sorted(df["release"].unique(), reverse=True)
-    selected_releases = st.multiselect("Release", releases, default=[releases[0]])
+    selected_releases = st.multiselect("Release", releases, default=releases)
     selected_modules = st.multiselect(
         "Módulo", sorted(df["modulo"].unique()), default=sorted(df["modulo"].unique())
     )
