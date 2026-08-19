@@ -220,7 +220,20 @@ with tab1:
     monthly_trend["Aprobación %"] = (
         monthly_trend["Aprobadas"] / monthly_trend["Ejecutadas"] * 100
     ).round(1)
-    st.line_chart(monthly_trend[["Aprobación %"]], color="#2563EB", height=260)
+    month_names = {
+        1: "Enero", 2: "Febrero", 3: "Marzo", 4: "Abril",
+        5: "Mayo", 6: "Junio", 7: "Julio", 8: "Agosto",
+        9: "Septiembre", 10: "Octubre", 11: "Noviembre", 12: "Diciembre",
+    }
+    monthly_trend = monthly_trend.reset_index()
+    monthly_trend["Mes"] = monthly_trend["mes"].dt.month.map(month_names)
+    st.line_chart(
+        monthly_trend,
+        x="Mes",
+        y="Aprobación %",
+        color="#2563EB",
+        height=260,
+    )
 
 with tab2:
     st.markdown("#### Mapa de priorización")
