@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
+import plotly.express as px
 import streamlit as st
 
 
@@ -205,7 +206,7 @@ with tab1:
         defects.columns = ["Críticos", "Altos"]
         st.bar_chart(defects, color=["#DC2626", "#F59E0B"], height=320)
 
-    st.markdown("#### Tendencia mensual de aprobación")
+    st.markdown("#### Distribución mensual de pruebas aprobadas")
     monthly_trend = (
         filtered.assign(
             mes=filtered["fecha_planificada"].dt.to_period("M").dt.to_timestamp()
@@ -227,13 +228,26 @@ with tab1:
     }
     monthly_trend = monthly_trend.reset_index()
     monthly_trend["Mes"] = monthly_trend["mes"].dt.month.map(month_names)
-    st.line_chart(
+    monthly_pie = px.pie(
         monthly_trend,
-        x="Mes",
-        y="Aprobación %",
-        color="#2563EB",
-        height=260,
+        names="Mes",
+        values="Aprobadas",
+        hole=0.42,
+        color_discrete_sequence=["#0EA5A4", "#2563EB", "#7C3AED", "#F59E0B"],
     )
+    monthly_pie.update_traces(
+        textinfo="label+percent",
+        hovertemplate=(
+            "<b>%{label}</b><br>Pruebas aprobadas: %{value}<br>"
+            "Participación: %{percent}<extra></extra>"
+        ),
+    )
+    monthly_pie.update_layout(
+        height=350,
+        margin=dict(l=10, r=10, t=10, b=10),
+        legend_title_text="Mes",
+    )
+    st.plotly_chart(monthly_pie, use_container_width=True)
 
 with tab2:
     st.markdown("#### Mapa de priorización")
